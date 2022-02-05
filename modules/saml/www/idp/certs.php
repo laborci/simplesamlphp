@@ -4,12 +4,12 @@
 $config = \SimpleSAML\Configuration::getInstance();
 $metadata = \SimpleSAML\Metadata\MetaDataStorageHandler::getMetadataHandler();
 
-if (!$config->getBoolean('enable.saml20-idp', false)) {
+if (!$config->getOptionalBoolean('enable.saml20-idp', false)) {
     throw new \SimpleSAML\Error\Error('NOACCESS');
 }
 
 // Check if valid local session exists..
-if ($config->getBoolean('admin.protectmetadata', false)) {
+if ($config->getOptionalBoolean('admin.protectmetadata', false)) {
     $authUtils = new \SimpleSAML\Utils\Auth();
     $authUtils->requireAdmin();
 }
