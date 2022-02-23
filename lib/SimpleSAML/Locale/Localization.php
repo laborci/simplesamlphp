@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace SimpleSAML\Locale;
 
+use Gettext\Generator\ArrayGenerator;
 use Gettext\Loader\PoLoader;
 use Gettext\Translations;
 use Gettext\Translator;
@@ -243,7 +244,10 @@ class Localization
         if (file_exists($poPath) && is_readable($poPath)) {
             $poLoader = new PoLoader();
             $translations = $poLoader->loadFile($poPath);
-            $this->translator = Translator::createFromTranslations($translations);
+            $arrayGenerator = new ArrayGenerator();
+            $this->translator->addTranslations(
+                $arrayGenerator->generateArray($translations)
+            );
         } else {
             $error = "Localization file '$poFile' not found in '$langPath', falling back to default";
             Logger::debug($_SERVER['PHP_SELF'] . ' - ' . $error);
