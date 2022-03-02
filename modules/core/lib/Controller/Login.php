@@ -461,12 +461,30 @@ class Login
     public function logout(string $as): RunnableResponse
     {
         $auth = new Auth\Simple($as);
+        $returnTo = $this->getReturnPath($request);
         return new RunnableResponse(
             [$auth, 'logout'],
-            [$this->config->getBasePath()]
+            [$returnTo]
         );
     }
 
+    /**
+     * Searches for a valid and allowed ReturnTo URL parameter,
+     * otherwise give the base installation page as a return point.
+     */
+    private function getReturnPath(Request $request): string
+    {
+        $httpUtils = new Utils\HTTP();
+
+        $returnTo = $request->query->get('ReturnTo', false);
+        if ($returnTo !== false) {
+            $returnTo = $httpUtils->checkURLAllowed($returnTo);
+        }
+        if (empty($returnTo)) {
+            return $this->config->getBasePath();
+        }
+        return $returnTo;
+    }
 
     /**
      * This clears the user's IdP discovery choices.
@@ -490,14 +508,7 @@ class Login
             $httpUtils->setCookie($cookieName, null, ['path' => $cookiePath, 'httponly' => false], false);
         }
 
-        // Find where we should go now.
-        $returnTo = $request->request->get('ReturnTo', false);
-        if ($returnTo !== false) {
-            $returnTo = $httpUtils->checkURLAllowed($returnTo);
-        } else {
-            // Return to the front page if no other destination is given. This is the same as the base cookie path.
-            $returnTo = $cookiePath;
-        }
+        $returnTo = $this->getReturnPath($request);
 
         // Redirect to destination.
         $httpUtils->redirectTrustedURL($returnTo);
