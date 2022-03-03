@@ -452,13 +452,14 @@ class Login
     /**
      * Log the user out of a given authentication source.
      *
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @param string $as The name of the auth source.
      *
      * @return \SimpleSAML\HTTP\RunnableResponse A runnable response which will actually perform logout.
      *
      * @throws \SimpleSAML\Error\CriticalConfigurationError
      */
-    public function logout(string $as): RunnableResponse
+    public function logout(Request $request, string $as): RunnableResponse
     {
         $auth = new Auth\Simple($as);
         $returnTo = $this->getReturnPath($request);

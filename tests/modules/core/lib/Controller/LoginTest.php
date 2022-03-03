@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SimpleSAML\Test\Module\core\Controller;
 
+use Exception;
 use ReflectionClass;
 use SimpleSAML\Auth;
 use SimpleSAML\Configuration;
@@ -81,6 +82,8 @@ class LoginTest extends ClearStateTestCase
             '/logout',
             'GET',
         );
+
+        $c = new Controller\Login($this->config);
 
         $response = $c->logout($request, 'example-authsource');
 
