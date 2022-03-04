@@ -14,7 +14,6 @@ use SimpleSAML\Utils;
 use SimpleSAML\XHTML\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Controller class for the core module.
@@ -43,30 +42,15 @@ class Login
         $this->config = $config;
     }
 
-    public function welcome(): Response
+
+    /**
+     * @return \SimpleSAML\XHTML\Template
+     */
+    public function welcome(): Template
     {
         return new Template($this->config, 'core:welcome.twig');
     }
 
-    /**
-     * Log the user out of a given authentication source.
-     *
-     * @param Request $request The request that lead to this logout operation.
-     * @param string $as The name of the auth source.
-     *
-     * @return \SimpleSAML\HTTP\RunnableResponse A runnable response which will actually perform logout.
-     *
-     * @throws \SimpleSAML\Error\CriticalConfigurationError
-     */
-    public function logout(Request $request, string $as): RunnableResponse
-    {
-        $auth = new Auth\Simple($as);
-        $returnTo = $this->getReturnPath($request);
-        return new RunnableResponse(
-            [$auth, 'logout'],
-            [$returnTo]
-        );
-    }
 
     /**
      * Searches for a valid and allowed ReturnTo URL parameter,
@@ -85,6 +69,7 @@ class Login
         }
         return $returnTo;
     }
+
 
     /**
      * This clears the user's IdP discovery choices.
