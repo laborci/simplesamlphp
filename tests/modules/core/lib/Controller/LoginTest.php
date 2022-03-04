@@ -6,7 +6,7 @@ namespace SimpleSAML\Test\Module\core\Controller;
 
 use ReflectionClass;
 use SimpleSAML\Configuration;
-use SimpleSAML\Error\Exception;
+use SimpleSAML\Error;
 use SimpleSAML\HTTP\RunnableResponse;
 use SimpleSAML\Locale\Localization;
 use SimpleSAML\Module\core\Controller;
@@ -32,6 +32,7 @@ class LoginTest extends ClearStateTestCase
     /** @var \SimpleSAML\Configuration[] */
     protected array $loadedConfigs;
 
+
     /**
      * Set up for each test.
      */
@@ -49,6 +50,7 @@ class LoginTest extends ClearStateTestCase
         Configuration::setPreLoadedConfig($this->config, 'config.php');
     }
 
+
     /**
      * Test that we are presented with a regular page if we go to the landing page.
      */
@@ -61,58 +63,6 @@ class LoginTest extends ClearStateTestCase
         $this->assertEquals('core:welcome.twig', $response->getTemplateName());
     }
 
-    /**
-     * Test basic operation of the logout controller.
-     * @TODO check if the passed auth source is correctly used
-     */
-    public function testLogout(): void
-    {
-        $request = Request::create(
-            '/logout',
-            'GET',
-        );
-
-        $c = new Controller\Login($this->config);
-
-        $response = $c->logout($request, 'example-authsource');
-
-        $this->assertInstanceOf(RunnableResponse::class, $response);
-        $callable = $response->getCallable();
-        $this->assertInstanceOf(\SimpleSAML\Auth\Simple::class, $callable[0]);
-        $this->assertEquals('logout', $callable[1]);
-    }
-
-    public function testLogoutReturnToDisallowedUrlRejected(): void
-    {
-        $request = Request::create(
-            '/logout/example-authsource',
-            'GET',
-            ['ReturnTo' => 'https://loeki.tv/asjemenou'],
-        );
-        $_SERVER['REQUEST_URI']  = 'https://example.com/simplesaml/module.php/core/logout/example-authsource';
-
-        $c = new Controller\Login($this->config);
-
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage('URL not allowed: https://loeki.tv/asjemenou');
-        $response = $c->logout($request, 'example-authsource');
-    }
-
-    public function testLogoutReturnToAllowedUrl(): void
-    {
-        $request = Request::create(
-            '/logout/example-authsource',
-            'GET',
-            ['ReturnTo' => 'https://example.org/something'],
-        );
-        $_SERVER['REQUEST_URI']  = 'https://example.com/simplesaml/module.php/core/logout/example-authsource';
-
-        $c = new Controller\Login($this->config);
-
-        $response = $c->logout($request, 'example-authsource');
-        $this->assertInstanceOf(RunnableResponse::class, $response);
-        $this->assertEquals('https://example.org/something', $response->getArguments()[0]);
-    }
 
     public function testClearDiscoChoicesReturnToDisallowedUrlRejected(): void
     {
@@ -125,7 +75,7 @@ class LoginTest extends ClearStateTestCase
 
         $c = new Controller\Login($this->config);
 
-        $this->expectException(Exception::class);
+        $this->expectException(Error\Exception::class);
         $this->expectExceptionMessage('URL not allowed: https://loeki.tv/asjemenou');
         $response = $c->cleardiscochoices($request);
     }

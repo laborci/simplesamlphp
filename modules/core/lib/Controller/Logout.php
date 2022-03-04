@@ -8,6 +8,7 @@ use Exception;
 use SAML2\Binding;
 use SAML2\Constants;
 use SimpleSAML\Auth;
+use SimpleSAML\Configuration;
 use SimpleSAML\Error;
 use SimpleSAML\HTTP\RunnableResponse;
 use SimpleSAML\IdP;
