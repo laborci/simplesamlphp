@@ -17,6 +17,7 @@ use SimpleSAML\Metadata\MetaDataStorageHandler;
 use SimpleSAML\Module\saml\Message;
 use SimpleSAML\Stats;
 use SimpleSAML\Utils;
+use SimpleSAML\XHTML\Template;
 use Symfony\Component\HttpFoundation\Request;
 
 use function call_user_func;
