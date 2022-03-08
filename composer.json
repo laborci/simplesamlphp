@@ -1,5 +1,5 @@
 {
-    "name": "simplesamlphp/simplesamlphp",
+    "name": "laborci/simplesamlphp",
     "description": "A PHP implementation of a SAML 2.0 service provider and identity provider.",
     "type": "project",
     "keywords": [ "saml2", "shibboleth","oauth","ws-federation","sp","idp" ],
@@ -38,7 +38,7 @@
         "files": ["tests/_autoload_modules.php"]
     },
     "require": {
-        "php": ">=7.4 || ^8.0",
+        "php": ">=7.4 || 8.*",
         "ext-date": "*",
         "ext-dom": "*",
         "ext-hash": "*",
