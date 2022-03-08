@@ -1,5 +1,5 @@
 {
-    "name": "laborci/simplesamlphp",
+    "name": "simplesamlphp/simplesamlphp",
     "description": "A PHP implementation of a SAML 2.0 service provider and identity provider.",
     "type": "project",
     "keywords": [ "saml2", "shibboleth","oauth","ws-federation","sp","idp" ],
